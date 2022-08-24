@@ -1,0 +1,40 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Проект movies-explorer",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dashimiko/movies-explorer-api.git"
+  },
+  "keywords": [],
+  "author": "da_miko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dashimiko/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/dashimiko/movies-explorer-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "celebrate": "^15.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-winston": "^4.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.8",
+    "validator": "^13.7.0",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.16"
+  }
+}
