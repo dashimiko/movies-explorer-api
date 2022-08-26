@@ -1,27 +1,22 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
-const { errors, celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const cors = require('cors');
-
-const {
-  login,
-  createUser,
-} = require('./controllers/users');
-
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const router = require('./routes');
+const centralizedErrorHandler = require('./middlewares/centralErrorHandling');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-const { userAuthorization } = require('./middlewares/auth');
-const usersRouter = require('./routes/users');
-const moviesRouter = require('./routes/movies');
-const { regex } = require('./utils/constants');
-const NotFoundError = require('./errors/notFoundError');
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/moviesdb');
+const { mongoUrl } = require('./utils/mongoConfig');
+
+mongoose.connect(mongoUrl);
 
 const options = {
   origin: [
@@ -33,45 +28,22 @@ const options = {
   credentials: true,
 };
 
-app.use('*', cors(options));
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
+app.use('*', cors(options));
 app.use(requestLogger);
 app.use(express.json());
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), createUser);
-
-app.use('/users', userAuthorization, usersRouter);
-app.use('/movies', userAuthorization, moviesRouter);
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Вы обратились к несуществующей странице'));
-});
-
+app.use(helmet());
+app.use(limiter);
+app.use(router);
 app.use(errorLogger);
-
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'что-то пошло не так' : message,
-  });
-  next();
-});
-
+app.use(centralizedErrorHandler);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
