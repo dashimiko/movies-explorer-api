@@ -22,8 +22,8 @@ const options = {
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://myprojectmesto.students.nomoredomains.xyz',
-    'http://myprojectmesto.students.nomoredomains.xyz',
+    'http://explorer.students.nomoredomains.sbs',
+    'https://explorer.students.nomoredomains.sbs',
   ],
   credentials: true,
 };
