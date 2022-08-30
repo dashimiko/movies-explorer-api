@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { regex } = require('../utils/constants');
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -27,8 +27,8 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validator: {
-      validate: {
-        match: [regex, 'Некорректная ссылка. Введите URL адрес '],
+      validator(value) {
+        return validator.isURL(value);
       },
     },
   },
@@ -36,8 +36,8 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validator: {
-      validate: {
-        match: [regex, 'Некорректная ссылка. Введите URL адрес '],
+      validator(value) {
+        return validator.isURL(value);
       },
     },
   },
@@ -45,8 +45,8 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validator: {
-      validate: {
-        match: [regex, 'Некорректная ссылка. Введите URL адрес '],
+      validator(value) {
+        return validator.isURL(value);
       },
     },
   },
@@ -56,7 +56,7 @@ const movieSchema = new mongoose.Schema({
     ref: 'user',
   },
   movieId: {
-    type: String,
+    type: Number,
     required: true,
   },
   nameRU: {

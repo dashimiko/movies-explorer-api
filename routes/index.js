@@ -15,9 +15,11 @@ router.post('/signin', validationLogin, login);
 
 router.post('/signup', validationCreateUser, createUser);
 
-router.use('/users', userAuthorization, usersRouter);
+router.use(userAuthorization);
 
-router.use('/movies', userAuthorization, moviesRouter);
+router.use('/users', usersRouter);
+
+router.use('/movies', moviesRouter);
 
 router.use((req, res, next) => {
   next(new NotFoundError('Вы обратились к несуществующей странице'));
