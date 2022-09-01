@@ -26,6 +26,8 @@ const updateUser = (req, res, next) => {
   }).catch((err) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       next(new BadRequestError('Переданы некорректные данные при обновлении профиля. Заполните поля, в них должно быть от 2 до 30 символов'));
+    } else if (err.code === 11000) {
+      next(new ConflictError('email занят'));
     } else {
       next(err);
     }

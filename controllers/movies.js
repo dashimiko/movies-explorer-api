@@ -17,7 +17,7 @@ const createMovie = (req, res, next) => {
     res.send(movie);
   }).catch((err) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new BadRequestError('Переданы некорректные данные при создании карточки. Заполните поля'));
+      next(new BadRequestError('Переданы некорректные данные при создании фильма. Заполните поля'));
     } else {
       next(err);
     }
@@ -29,15 +29,15 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Передан несуществующий _id карточки');
+        throw new NotFoundError('Передан несуществующий _id фильма');
       } else if (!movie.owner.equals(owner)) {
-        throw new ForbiddenError('Вы можете удалять только созданные вами карточки');
+        throw new ForbiddenError('Вы можете удалять только созданные вами фильмы');
       } else {
-        movie.remove().then(() => res.send(movie));
+        return movie.remove().then(() => res.send(movie));
       }
     }).catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для удаления карточки.'));
+        next(new BadRequestError('Переданы некорректные данные для удаления фильма.'));
       } else {
         next(err);
       }
